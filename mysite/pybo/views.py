@@ -5,4 +5,4 @@ from django.shortcuts import render
 from django.http import HttpResponse
 
 def index(request):
-    return HttpResponse('pybo에 온걸 환영한다.')
+    return HttpResponse('pybo에 온걸 환영합니다 주현님.')
