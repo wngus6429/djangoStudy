@@ -5,7 +5,7 @@ from django.db import models
 class Question(models.Model):
     # 글자수 제한을 위해서는 CharField를 사용
     subject = models.CharField(max_length=200)
-    content = models.TextField() #textfield는 제한 없음.
+    content = models.TextField()  # textfield는 제한 없음.
     create_date = models.DateTimeField()
 
 class Answer(models.Model):
