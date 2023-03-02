@@ -4,8 +4,9 @@ from django.shortcuts import render
 
 from django.http import HttpResponse
 # 조회한 Question모델 데이터를 템플릿 파일을 사용하여 화면에 출력할수 있는 render함수를 사용
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from .models import Question
+from django.utils import timezone
 
 # def index(request):
 #     return HttpResponse('pybo에 온걸 환영합니다 주현님.')
@@ -34,3 +35,15 @@ def detail(request, question_id):
     context = {'question': question}
     print("context", context)
     return render(request, 'pybo/question_detail.html', context)
+
+def answer_create(request, question_id):
+    """
+    pybo 답변 등록
+    """
+    print("확인요", request, question_id)
+    question = get_object_or_404(Question, pk=question_id)
+    question.answer_set.create(content=request.POST.get('content'), create_date=timezone.now())
+    return redirect('pybo:detail', question_id=question.id)
+    # content는 textarea의 값이지
+    # request.POST.get('content')는 POST형식으로 전송된 form데이터 항목중 name이 content인 값을 의미
+    # Answer모델이 Question 모델을 Foreign Key로 참조하고 있으므로 question.answer_set 같은 표현을 사용할수 있다.

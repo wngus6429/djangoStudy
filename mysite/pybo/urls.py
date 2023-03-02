@@ -1,8 +1,11 @@
 from django.urls import path
 from . import views
 
+app_name = 'pybo'
+
 urlpatterns = [
     # views 파일 안에 index 함수를 참조 한다고
-    path('', views.index),
-    path('<int:question_id>/', views.detail),
+    path('', views.index, name='index'),
+    path('<int:question_id>/', views.detail, name='detail'),
+    path('answer/create/<int:question_id>/', views.answer_create, name='answer_create')
 ]

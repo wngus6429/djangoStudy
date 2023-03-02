@@ -1,4 +1,27 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+
 <h1>{{ question.subject }}</h1>
 <div>
   {{ question.content }}
 </div>
+
+<h5>{{ question.answer_set.count }}개의 답변이 있습니다.</h5>
+<div>
+  <ul>
+    {% for answer in question.answer_set.all %}
+      <li>{{ answer.content }}</li>
+    {% endfor %}
+  </ul>
+</div>
+
+<form action="{% url 'pybo:answer_create' question.id %}" method="post">
+  {% csrf_token %}
+  <textarea name="content" id="content" rows="15"></textarea>
+  <input type="submit" value="답변 등록">
+</form>
+
+<!--{% csrf_token %} 코드는 보안관련 이다. form엘리먼트를 통해 전송된 데이터(답변)가 실제로-->
+<!--웹 브라우저에서 작성된 데이터인지 판단하는 검사 역할을 한다. 그러므로-->
+<!--form 태그 바로 밑에 두는것이다. 해킹처럼 올바르지 않은 방법으로 데이터가 전송되면-->
+<!--서버에서 발행한 csrf_token값과 해커가 보낸 csrf_token값이 달라서 오류 발생으로 보안 유지-->
