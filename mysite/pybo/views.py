@@ -7,6 +7,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Question
 from django.utils import timezone
+from .forms import QuestionForm
 
 # def index(request):
 #     return HttpResponse('pybo에 온걸 환영합니다 주현님.')
@@ -48,3 +49,20 @@ def answer_create(request, question_id):
     # content는 textarea의 값이지
     # request.POST.get('content')는 POST형식으로 전송된 form데이터 항목중 name이 content인 값을 의미
     # Answer모델이 Question 모델을 Foreign Key로 참조하고 있으므로 question.answer_set 같은 표현을 사용할수 있다.
+
+def question_create(request):
+    """
+    PYbo 질문 등록
+    """
+    if request.method == 'POST':
+        form = QuestionForm(request.POST)
+        if form.is_valid():
+            question = form.save(commit=False)
+            question.create_date = timezone.now()
+            question.save()
+            return redirect('pybo:index')
+    else:
+        form = QuestionForm()
+    context = {'form': form}
+    return render(request, 'pybo/question_form.html', context)
+    # form = QuestionForm() # 장고의 폼이다.
