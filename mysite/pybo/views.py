@@ -56,12 +56,14 @@ def question_create(request):
     """
     if request.method == 'POST':
         form = QuestionForm(request.POST)
-        if form.is_valid():
+        if form.is_valid(): # POST요청으로 받은 Form이 유효한지 확인, 유효 안하면 화면에 오류 전달
+            # Form으로 Question모델 데이터를 저장하기 위한 코드 commit false는 임시저장
             question = form.save(commit=False)
             question.create_date = timezone.now()
             question.save()
             return redirect('pybo:index')
     else:
+        # request.method가 GET인 경우 호출, 입력값 없이 객체 생성
         form = QuestionForm()
     context = {'form': form}
     return render(request, 'pybo/question_form.html', context)
