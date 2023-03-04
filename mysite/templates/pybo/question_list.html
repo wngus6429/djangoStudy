@@ -10,24 +10,24 @@
         </tr>
         </thead>
         <tbody>
-        {% if question_list %}
-        {% for question in question_list %}
-        <tr>
-            <!-- 아래는 반복시 자동으로 매겨지는 순서 값을 의미함 -->
-            <td>{{ forloop.counter}}</td>
-            <td>
-                <a href="{% url 'pybo:detail' question.id %}">
-                    {{ question.subject }}
-                </a>
-            </td>
-            <td>{{ question.create_date }}</td>
-        </tr>
-        {% endfor %}
-        {% else %}
-        <tr>
-            <td colspan="3">질문이 없습니다.</td>
-        </tr>
-        {% endif %}
+            {% if question_list %}
+                {% for question in question_list %}
+                <tr>
+                    <!-- 아래는 반복시 자동으로 매겨지는 순서 값을 의미함 -->
+                    <td>{{ forloop.counter}}</td>
+                    <td>
+                        <a href="{% url 'pybo:detail' question.id %}">
+                            {{ question.subject }}
+                        </a>
+                    </td>
+                    <td>{{ question.create_date }}</td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="3">질문이 없습니다.</td>
+                </tr>
+            {% endif %}
         </tbody>
     </table>
     <a href="{% url 'pybo:question_create' %}" class="btn btn-primary">

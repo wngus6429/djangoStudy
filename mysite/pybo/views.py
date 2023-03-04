@@ -17,13 +17,13 @@ def index(request):
     pybo 목록 출력
     """
     question_list = Question.objects.order_by('-create_date') # 작성한 날짜 역순으로 조회 할려고, - 가 역순
-    # render함수가 템플릿을 HTML로 변환되는 과정에서 사용되는 데이터이다.
     context = {'question_list': question_list}
+    return render(request, 'pybo/question_list.html', context)
+    # render 함수가 템플릿을 HTML로 변환되는 과정에서 사용되는 데이터이다.
     # return HttpResponse("안녕하세요 pybo에 온걸 환영한다.")
-    # render함수는 context에 있는 Question 모델 데이터 question_list를 pybo/question_list.html파일에 적용하여
+    # render 함수는 context에 있는 Question 모델 데이터 question_list를 pybo/question_list.html파일에 적용하여
     # HTML 코드로 변환한다. 이런 파일 (pybo/question_list.html)을 템플릿이라 부른다.
     # 템플릿은 장고의 태그를 추가로 사용할수 있는 HTML파일이라 생각하면 된다.
-    return render(request, 'pybo/question_list.html', context)
 
 def detail(request, question_id):
     """
@@ -67,6 +67,7 @@ def question_create(request):
     PYbo 질문 등록
     """
     if request.method == 'POST':
+        print("키타쪼")
         form = QuestionForm(request.POST)
         # POST요청으로 받은 Form이 유효한지 확인, 유효 안하면 화면에 오류 전달
         print("form", form)
@@ -77,6 +78,7 @@ def question_create(request):
             question.save()
             return redirect('pybo:index')
     else:
+        # get인 경우는 질문 작성할려고 폼이 텅빈 상태
         # request.method가 GET인 경우 호출, 입력값 없이 객체 생성
         form = QuestionForm()
     context = {'form': form}
