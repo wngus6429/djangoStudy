@@ -7,7 +7,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Question
 from django.utils import timezone
-from .forms import QuestionForm
+from .forms import QuestionForm, AnswerForm
 
 # def index(request):
 #     return HttpResponse('pybo에 온걸 환영합니다 주현님.')
@@ -44,8 +44,20 @@ def answer_create(request, question_id):
     """
     print("확인요", request, question_id)
     question = get_object_or_404(Question, pk=question_id)
-    question.answer_set.create(content=request.POST.get('content'), create_date=timezone.now())
-    return redirect('pybo:detail', question_id=question.id)
+    if request.method == "POST":
+        form = AnswerForm(request.POST)
+        if form.is_valid():
+            answer = form.save(commit=False)
+            answer.create_date = timezone.now()
+            answer.question = question
+            answer.save()
+            return redirect('pybo:detail', question_id=question.id)
+    else:
+        form = AnswerForm()
+    context = {'question': question, 'form': form}
+    return render(request, 'pybo/question_detail.html', context)
+    # question.answer_set.create(content=request.POST.get('content'), create_date=timezone.now())
+    # return redirect('pybo:detail', question_id=question.id)
     # content는 textarea의 값이지
     # request.POST.get('content')는 POST형식으로 전송된 form데이터 항목중 name이 content인 값을 의미
     # Answer모델이 Question 모델을 Foreign Key로 참조하고 있으므로 question.answer_set 같은 표현을 사용할수 있다.
@@ -56,7 +68,9 @@ def question_create(request):
     """
     if request.method == 'POST':
         form = QuestionForm(request.POST)
-        if form.is_valid(): # POST요청으로 받은 Form이 유효한지 확인, 유효 안하면 화면에 오류 전달
+        # POST요청으로 받은 Form이 유효한지 확인, 유효 안하면 화면에 오류 전달
+        print("form", form)
+        if form.is_valid():
             # Form으로 Question모델 데이터를 저장하기 위한 코드 commit false는 임시저장
             question = form.save(commit=False)
             question.create_date = timezone.now()
