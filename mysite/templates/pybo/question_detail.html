@@ -34,14 +34,14 @@
   <form action="{% url 'pybo:answer_create' question.id %}" method="post" class="my-3"}>
         {% csrf_token %}
         {% if form.errors %}
-        <div class="alert alert-danger" role="alert">
-          {% for field in form %}
-            {% if field.errors %}
-            <strong>{{ field.label }}</strong>
-            {{ field.errors }}
-            {% endif %}
-          {% endfor %}
-        </div>
+          <div class="alert alert-danger" role="alert">
+            {% for field in form %}
+              {% if field.errors %}
+                <strong>{{ field.label }}</strong>
+                {{ field.errors }}
+              {% endif %}
+            {% endfor %}
+          </div>
         {% endif %}
         <div class="form-group">
           <textarea name="content" id="content" class="form-control" rows="10">
@@ -51,24 +51,6 @@
   </form>
 </div>
 {% endblock %}
-
-<!--<h1>{{ question.subject }}</h1>-->
-<!--<div>-->
-<!--  {{ question.content }}-->
-<!--</div>-->
-<!--<h5>{{ question.answer_set.count }}개의 답변이 있습니다.</h5>-->
-<!--<div>-->
-<!--  <ul>-->
-<!--    {% for answer in question.answer_set.all %}-->
-<!--      <li>{{ answer.content }}</li>-->
-<!--    {% endfor %}-->
-<!--  </ul>-->
-<!--</div>-->
-<!--<form action="{% url 'pybo:answer_create' question.id %}" method="post">-->
-<!--  {% csrf_token %}-->
-<!--  <textarea name="content" id="content" rows="15"></textarea>-->
-<!--  <input type="submit" value="답변 등록">-->
-<!--</form>-->
 
 <!--{% csrf_token %} 코드는 보안관련 이다. form엘리먼트를 통해 전송된 데이터(답변)가 실제로-->
 <!--웹 브라우저에서 작성된 데이터인지 판단하는 검사 역할을 한다. 그러므로-->

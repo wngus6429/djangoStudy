@@ -31,11 +31,10 @@ def detail(request, question_id):
     """
     # question_id는 URL 매핑에 있던 question_id이다.
     # /pybo/2/ 페이지가 호출되면 최종으로 detail 함수의 매개변수 question_id에 2가 전달된다.
-    print('쉬발', request, question_id)
     question = get_object_or_404(Question, pk=question_id)
     # question = Question.objects.get(id=question_id)
     context = {'question': question}
-    print("context", context)
+    print('Detail페이지', context)
     return render(request, 'pybo/question_detail.html', context)
 
 def answer_create(request, question_id):
