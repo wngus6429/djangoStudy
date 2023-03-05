@@ -7,6 +7,9 @@ class Question(models.Model):
     subject = models.CharField(max_length=200)
     content = models.TextField()  # textfield는 제한 없음.
     create_date = models.DateTimeField()
+    def __str__(self):
+        # 이렇게 해야 자세한 내용이 보인다
+        return self.subject
 
 class Answer(models.Model):
     # 어떤 모델이 다른 모델을 속성으로 가지면 ForeignKey를 이용.(다른 모델과의 연결)
@@ -14,3 +17,7 @@ class Answer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     content = models.TextField()
     create_date = models.DateTimeField()
+
+    def __str__(self):
+        # 이렇게 해야 자세한 내용이 보인다
+        return self.question

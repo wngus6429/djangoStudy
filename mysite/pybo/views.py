@@ -2,13 +2,14 @@ from django.shortcuts import render
 
 # Create your views here.
 
-from django.http import HttpResponse
+
 # 조회한 Question모델 데이터를 템플릿 파일을 사용하여 화면에 출력할수 있는 render함수를 사용
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Question
 from django.utils import timezone
 from .forms import QuestionForm, AnswerForm
 
+# from django.http import HttpResponse
 # def index(request):
 #     return HttpResponse('pybo에 온걸 환영합니다 주현님.')
 
