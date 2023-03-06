@@ -8,6 +8,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Question
 from django.utils import timezone
 from .forms import QuestionForm, AnswerForm
+from django.core.paginator import Paginator # 게시물 페이지 만들기
 
 # from django.http import HttpResponse
 # def index(request):
@@ -17,8 +18,21 @@ def index(request):
     """
     pybo 목록 출력
     """
-    question_list = Question.objects.order_by('-create_date') # 작성한 날짜 역순으로 조회 할려고, - 가 역순
-    context = {'question_list': question_list}
+    # 입력 인자, localhost:8000/pybo/?page=1 이런식
+    page = request.GET.get('page', '1') # 페이지
+    # get('page', '1')에서 '1'은 /pybo/ 처럼 ?page=1과 같은 page 파라미터가 없는 URL을 위해
+    # 기본값으로 1을 지정한 것이다. 페이지 구현에 사용한 클래스는 Paginator이다.
+
+    # 조회
+    question_list = Question.objects.order_by('-create_date')
+
+    # 페이징 처리
+    paginator = Paginator(question_list, 5) # 페이지당 10개씩 보여주기
+    page_obj = paginator.get_page(page)
+    # question_list = Question.objects.order_by('-create_date') # 작성한 날짜 역순으로 조회 할려고, - 가 역순
+    # context = {'question_list': question_list}
+
+    context = {'question_list': page_obj}
     return render(request, 'pybo/question_list.html', context)
     # render 함수가 템플릿을 HTML로 변환되는 과정에서 사용되는 데이터이다.
     # return HttpResponse("안녕하세요 pybo에 온걸 환영한다.")
