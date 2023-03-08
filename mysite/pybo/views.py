@@ -1,10 +1,6 @@
-from django.shortcuts import render
-
-# Create your views here.
-
-
 # 조회한 Question모델 데이터를 템플릿 파일을 사용하여 화면에 출력할수 있는 render함수를 사용
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
 from .models import Question
 from django.utils import timezone
 from .forms import QuestionForm, AnswerForm
@@ -52,6 +48,8 @@ def detail(request, question_id):
     print('Detail페이지', context)
     return render(request, 'pybo/question_detail.html', context)
 
+# login_required 애너테이션을 통해 로그인 검사
+@login_required(login_url='common:login')
 def answer_create(request, question_id):
     """
     pybo 답변 등록
@@ -62,6 +60,7 @@ def answer_create(request, question_id):
         form = AnswerForm(request.POST)
         if form.is_valid():
             answer = form.save(commit=False)
+            answer.author = request.user # 추가한 속성 author 적용
             answer.create_date = timezone.now()
             answer.question = question
             answer.save()
@@ -76,18 +75,20 @@ def answer_create(request, question_id):
     # request.POST.get('content')는 POST형식으로 전송된 form데이터 항목중 name이 content인 값을 의미
     # Answer모델이 Question 모델을 Foreign Key로 참조하고 있으므로 question.answer_set 같은 표현을 사용할수 있다.
 
+@login_required(login_url='common:login')
 def question_create(request):
     """
     PYbo 질문 등록
     """
+    print('질문만들기request', request.user)
     if request.method == 'POST':
-        print("키타쪼")
         form = QuestionForm(request.POST)
         # POST요청으로 받은 Form이 유효한지 확인, 유효 안하면 화면에 오류 전달
         print("form", form)
         if form.is_valid():
             # Form으로 Question모델 데이터를 저장하기 위한 코드 commit false는 임시저장
             question = form.save(commit=False)
+            question.author = request.user  # 추가한 속성 author 적용
             question.create_date = timezone.now()
             question.save()
             return redirect('pybo:index')
