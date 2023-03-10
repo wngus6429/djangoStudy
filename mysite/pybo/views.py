@@ -1,7 +1,8 @@
 # 조회한 Question모델 데이터를 템플릿 파일을 사용하여 화면에 출력할수 있는 render함수를 사용
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from .models import Question
+from django.contrib import messages
+from .models import Question, Answer
 from django.utils import timezone
 from .forms import QuestionForm, AnswerForm
 from django.core.paginator import Paginator # 게시물 페이지 만들기
@@ -99,3 +100,81 @@ def question_create(request):
     context = {'form': form}
     return render(request, 'pybo/question_form.html', context)
     # form = QuestionForm() # 장고의 폼이다.
+
+@login_required(login_url='common:login')
+def question_modify(request, question_id):
+    """
+    pybo질문수정
+    """
+    # request.user = 로그인한 사용자, question.author = 글쓴이
+    question = get_object_or_404(Question, pk=question_id)
+    if request.user != question.author:
+        messages.error(request, "수정권한이 없습니다.")
+        return redirect('pybo:detail', question_id=question.id)
+    if request.method == "POST":
+        # 질문 수정화면에서 <저장하기>를 누르면 /pybo/question/modify/2/ 페이지 Post방식 호출
+        form = QuestionForm(request.POST, instance=question)
+        if form.is_valid():
+            question = form.save(commit=False)
+            question.author = request.user
+            question.modify_date = timezone.now() # 수정일시 저장
+            question.save()
+            return redirect('pybo:detail', question_id=question.id)
+    else:
+        # /pybo/question/modify/2/ 페이지 GET요청
+        # 기존에 저장되어 있던 제목, 내용이 반영된 상태에서 수정 가능하게 폼 생성
+        form = QuestionForm(instance=question)
+    context = {'form': form}
+    return render(request, 'pybo/question_form.html', context)
+# 데이터 저장시 form 엘리먼트에 action 속성이 없으면 현재의 페이지로 폼을 전송한다.
+# 질문 수정에서 사용한 템플릿은 질문 등록시 사용한 pybo/question_form.html 파일을 그대로 사용한다.
+@login_required(login_url='common:login') # 로그인한 사용자와 글쓴이가 동일한가.
+def question_delete(request, question_id):
+    """
+    질문삭제
+    """
+    question = get_object_or_404(Question, pk=question_id)
+    if request.user != question.author:
+        messages.error(request, '삭제권한이 없습니다')
+        return redirect('pybo:detail', question_id=question_id)
+    question.delete()
+    return redirect('pybo:index')
+
+@login_required(login_url='common:login')
+def answer_modify(request, answer_id):
+    """
+    pybo 답변 수정
+    """
+    # get_object_or_404 함수는 Django에서 제공하는 단축 함수로, 첫 번째 인자로 모델 클래스(Model Class)를,
+    # 두 번째 인자로는 검색 조건을 전달받아 해당 조건으로 검색된 객체(Object)를 반환합니다.
+    # 검색된 객체가 존재하지 않는 경우, Http404 예외를 발생시킵니다.
+    # 여기서 pk=answer_id는 Answer 모델에서 pk 필드 값이 answer_id인 레코드를 검색하겠다는 의미입니다. 즉, answer_id는 Answer 모델에서 특정 레코드를 식별하는 기본 키 값입니다
+    answer = get_object_or_404(Answer, pk=answer_id)
+    if request.user != answer.author:
+        messages.error(request, '수정권한이 없습니다.')
+        return redirect('pybo:detail', question_id=answer.question.id)
+
+    if request.method == "POST":
+        form = AnswerForm(request.POST, instance=answer)
+        if form.is_valid():
+            answer = form.save(commit=False)
+            answer.author = request.user
+            answer.modify_date = timezone.now()
+            answer.save()
+            return redirect('pybo:detail', question_id=answer.question_id)
+    else:
+        form = AnswerForm(instance=answer)
+    context = {'answer':answer, 'form':form}
+    return render(request, 'pybo/answer_form.html', context)
+
+@login_required(login_url='common:login')
+def answer_delete(request, answer_id):
+    """
+    답변 삭제
+    """
+    answer = get_object_or_404(Answer, pk=answer_id)
+    if request.user != answer.author:
+        messages.error('request', '삭제 권한이 없습니다')
+    else:
+        answer.delete()
+    return redirect('pybo:detail', question_id=answer.question.id)

@@ -10,6 +10,9 @@ class Question(models.Model):
     subject = models.CharField(max_length=200)
     content = models.TextField()  # textfield는 제한 없음.
     create_date = models.DateTimeField()
+    modify_date = models.DateTimeField(null=True, blank=True)
+    # blank=True는 form.is_valid()를 통한 입력 폼 데이터 검사시 값이 없어도 된다는것.
+    # 즉 null=True, blank=True 로 인해 어떤 조건으로든 값을 비워둘수 있다는것
     def __str__(self):
         # 이렇게 해야 자세한 내용이 보인다
         return self.subject
@@ -21,7 +24,7 @@ class Answer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     content = models.TextField()
     create_date = models.DateTimeField()
-
+    modify_date = models.DateTimeField(null=True, blank=True)
     def __str__(self):
         # 이렇게 해야 자세한 내용이 보인다
         return self.question
