@@ -28,6 +28,7 @@ class Answer(models.Model):
     def __str__(self):
         # 이렇게 해야 자세한 내용이 보인다
         return self.question
+
 class Comment(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     content = models.TextField()
