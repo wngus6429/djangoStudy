@@ -5,6 +5,7 @@ app_name = 'pybo'
 
 urlpatterns = [
     # views 파일 안에 index 함수를 참조 한다고
+<<<<<<< HEAD
     path('', views.index, name='index'),
     path('<int:question_id>/', views.detail, name='detail'),
     path('answer/create/<int:question_id>/', views.answer_create, name='answer_create'),
@@ -13,4 +14,7 @@ urlpatterns = [
     path('question/delete/<int:question_id>/', views.question_delete, name='question_delete'),
     path('answer/modify/<int:answer_id>/', views.answer_modify, name='answer_modify'),
     path('answer/delete/<int:answer_id>/', views.answer_delete, name='answer_delete'),
+=======
+    path('', views.index)
+>>>>>>> parent of 07909ae (update study 0301)
 ]

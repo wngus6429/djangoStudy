@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 조회한 Question모델 데이터를 템플릿 파일을 사용하여 화면에 출력할수 있는 render함수를 사용
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
@@ -178,3 +179,13 @@ def answer_delete(request, answer_id):
     else:
         answer.delete()
     return redirect('pybo:detail', question_id=answer.question.id)
+=======
+from django.shortcuts import render
+
+# Create your views here.
+
+from django.http import HttpResponse
+
+def index(request):
+    return HttpResponse('pybo에 온걸 환영합니다 주현님.')
+>>>>>>> parent of 07909ae (update study 0301)
