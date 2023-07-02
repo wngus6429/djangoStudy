@@ -1,0 +1,29 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
+    <!-- Pybo CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+    <title>Hello, Pybo</title>
+</head>
+<body>
+{% include "navbar.html" %}
+<!-- 기본 템플릿 안에 삽입될 내용-->
+<!-- 이 부분이 이후 base.html 템플릿 파일을 상속한 파일에서 구현해야 하는 영역이됨.-->
+{% block content %}
+{% endblock %}
+<!--기본 템플릿 안에 삽입될 내용 end-->
+<!--제이쿼리 JS-->
+<script src="{% static 'jquery-3.4.1.min.js' %}"></script>
+<!--부트스트랩 JS-->
+<script src="{% static 'bootstrap.min.js' %}"></script>
+<!-- 자바스크립트 Start-->
+{% block script %}
+{% endblock %}
+<!-- 자바스크립트 End-->
+</body>
+</html>
