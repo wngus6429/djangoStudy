@@ -37,7 +37,8 @@
         </div>
         {% endfor %}
         <form action="{% url 'pybo:answer_create' question.id %}" method="post" class="my-3" }>
-          {% csrf_token %} {% if form.errors %}
+          {% csrf_token %}
+          {% if form.errors %}
           <div class="alert alert-danger" role="alert">
             {% for field in form %} {% if field.errors %}
             <strong>{{ field.label }}</strong>
@@ -55,7 +56,7 @@
       {% endblock %}
       {% block script %}
       <script type="text/javascript">
-        $(document).ready(function(){
+        $(document).ready(function(){S
           $(".delete").on('click', function(){
             if(confirm('정말로 삭제하겠습니까?')){
               location.href = $(this).data('uri');
@@ -64,7 +65,7 @@
         })
       </script>
       {% endblock %}
-      <!--{% csrf_token %} 코드는 보안관련 이다. form엘리먼트를 통해 전송된 데이터(답변)가 실제로-->
+      <!--{% csrf_token %} 코드는 보안관련 이다. form엘리먼트를 통해 전송된 데이터(답변)가 실제로
       <!--웹 브라우저에서 작성된 데이터인지 판단하는 검사 역할을 한다. 그러므로-->
       <!--form 태그 바로 밑에 두는것이다. 해킹처럼 올바르지 않은 방법으로 데이터가 전송되면-->
       <!--서버에서 발행한 csrf_token값과 해커가 보낸 csrf_token값이 달라서 오류 발생으로 보안 유지-->
