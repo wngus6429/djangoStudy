@@ -9,7 +9,10 @@ from django.core.paginator import Paginator # 게시물 페이지 만들기
 
 # from django.http import HttpResponse
 # def index(request):
-#     return HttpResponse('pybo에 온걸 환영합니다 주현님.')
+#     quesiton_list = Question.objects.order_by('-create_date')
+#     context = {'quesiton_list':quesiton_list}
+#     print(context)
+#     return render(request, 'pybo/question_list.html', context)
 
 def index(request):
     """
