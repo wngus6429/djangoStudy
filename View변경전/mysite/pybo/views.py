@@ -5,7 +5,7 @@ from django.contrib import messages
 from .models import Question, Answer
 from django.utils import timezone
 from .forms import QuestionForm, AnswerForm
-from django.core.paginator import Paginator # 게시물 페이지 만들기
+from django.core.paginator import Paginator  # 게시물 페이지 만들기
 
 # from django.http import HttpResponse
 # def index(request):
@@ -14,13 +14,14 @@ from django.core.paginator import Paginator # 게시물 페이지 만들기
 #     print(context)
 #     return render(request, 'pybo/question_list.html', context)
 
+
 def index(request):
     """
     pybo 목록 출력
     """
     print('request', request)
     # 입력 인자, localhost:8000/pybo/?page=1 이런식
-    page = request.GET.get('page', '1') # 페이지
+    page = request.GET.get('page', '1')  # 페이지
     # get('page', '1')에서 '1'은 /pybo/ 처럼 ?page=1과 같은 page 파라미터가 없는 URL을 위해
     # 기본값으로 1을 지정한 것이다. 페이지 구현에 사용한 클래스는 Paginator이다.
 
@@ -28,7 +29,7 @@ def index(request):
     question_list = Question.objects.order_by('-create_date')
 
     # 페이징 처리
-    paginator = Paginator(question_list, 7) # 페이지당 10개씩 보여주기
+    paginator = Paginator(question_list, 7)  # 페이지당 10개씩 보여주기
     page_obj = paginator.get_page(page)
     # question_list = Question.objects.order_by('-create_date') # 작성한 날짜 역순으로 조회 할려고, - 가 역순
     # context = {'question_list': question_list}
@@ -41,6 +42,7 @@ def index(request):
     # render 함수는 context에 있는 Question 모델 데이터 question_list를 pybo/question_list.html파일에 적용하여
     # HTML 코드로 변환한다. 이런 파일 (pybo/question_list.html)을 템플릿이라 부른다.
     # 템플릿은 장고의 태그를 추가로 사용할수 있는 HTML파일이라 생각하면 된다.
+
 
 def detail(request, question_id):
     """
@@ -55,6 +57,8 @@ def detail(request, question_id):
     return render(request, 'pybo/question_detail.html', context)
 
 # login_required 애너테이션을 통해 로그인 검사
+
+
 @login_required(login_url='common:login')
 def answer_create(request, question_id):
     """
@@ -66,7 +70,7 @@ def answer_create(request, question_id):
         form = AnswerForm(request.POST)
         if form.is_valid():
             answer = form.save(commit=False)
-            answer.author = request.user # 추가한 속성 author 적용
+            answer.author = request.user  # 추가한 속성 author 적용
             answer.create_date = timezone.now()
             answer.question = question
             answer.save()
@@ -75,11 +79,17 @@ def answer_create(request, question_id):
         form = AnswerForm()
     context = {'question': question, 'form': form}
     return render(request, 'pybo/question_detail.html', context)
+    # question = get_object_or_404(Question, pk=question_id)
     # question.answer_set.create(content=request.POST.get('content'), create_date=timezone.now())
     # return redirect('pybo:detail', question_id=question.id)
     # content는 textarea의 값이지
-    # request.POST.get('content')는 POST형식으로 전송된 form데이터 항목중 name이 content인 값을 의미
-    # Answer모델이 Question 모델을 Foreign Key로 참조하고 있으므로 question.answer_set 같은 표현을 사용할수 있다.
+    #! request.POST.get('content')는 POST형식으로 전송된 form데이터 항목중 name이 content인 값을 의미
+    #! Answer모델이 Question 모델을 Foreign Key로 참조하고 있으므로 question.answer_set 같은 표현을 사용할수 있다.
+    #! 아래는 Answer을 사용해서 저장하는 방법임
+    # question = get_object_or_404(Question, pk=question_id)
+    # answer= Answer(question=question, content=request.POST.get('content'), create_date=timezone.now())
+    # answer.save()
+
 
 @login_required(login_url='common:login')
 def question_create(request):
@@ -106,6 +116,7 @@ def question_create(request):
     return render(request, 'pybo/question_form.html', context)
     # form = QuestionForm() # 장고의 폼이다.
 
+
 @login_required(login_url='common:login')
 def question_modify(request, question_id):
     """
@@ -122,7 +133,7 @@ def question_modify(request, question_id):
         if form.is_valid():
             question = form.save(commit=False)
             question.author = request.user
-            question.modify_date = timezone.now() # 수정일시 저장
+            question.modify_date = timezone.now()  # 수정일시 저장
             question.save()
             return redirect('pybo:detail', question_id=question.id)
     else:
@@ -133,7 +144,9 @@ def question_modify(request, question_id):
     return render(request, 'pybo/question_form.html', context)
 # 데이터 저장시 form 엘리먼트에 action 속성이 없으면 현재의 페이지로 폼을 전송한다.
 # 질문 수정에서 사용한 템플릿은 질문 등록시 사용한 pybo/question_form.html 파일을 그대로 사용한다.
-@login_required(login_url='common:login') # 로그인한 사용자와 글쓴이가 동일한가.
+
+
+@login_required(login_url='common:login')  # 로그인한 사용자와 글쓴이가 동일한가.
 def question_delete(request, question_id):
     """
     질문삭제
@@ -144,6 +157,7 @@ def question_delete(request, question_id):
         return redirect('pybo:detail', question_id=question_id)
     question.delete()
     return redirect('pybo:index')
+
 
 @login_required(login_url='common:login')
 def answer_modify(request, answer_id):
@@ -169,8 +183,9 @@ def answer_modify(request, answer_id):
             return redirect('pybo:detail', question_id=answer.question_id)
     else:
         form = AnswerForm(instance=answer)
-    context = {'answer':answer, 'form':form}
+    context = {'answer': answer, 'form': form}
     return render(request, 'pybo/answer_form.html', context)
+
 
 @login_required(login_url='common:login')
 def answer_delete(request, answer_id):
