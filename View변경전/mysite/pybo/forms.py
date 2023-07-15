@@ -10,6 +10,7 @@ class QuestionForm(forms.ModelForm):
     class Meta:
         model = Question
         fields = ['subject', 'content']
+        # 한글로 보기위해 아래와 같이 라벨을 설정
         labels = {
             'subject': '제목',
             'content': '내용',

@@ -96,11 +96,9 @@ def question_create(request):
     """
     PYbo 질문 등록
     """
-    print('질문만들기request', request.user)
     if request.method == 'POST':
         form = QuestionForm(request.POST)
         # POST요청으로 받은 Form이 유효한지 확인, 유효 안하면 화면에 오류 전달
-        print("form", form)
         if form.is_valid():
             # Form으로 Question모델 데이터를 저장하기 위한 코드 commit false는 임시저장
             question = form.save(commit=False)
@@ -109,7 +107,7 @@ def question_create(request):
             question.save()
             return redirect('pybo:index')
     else:
-        # get인 경우는 질문 작성할려고 폼이 텅빈 상태
+        # get인 경우는 질문 작성할려고 폼이 텅빈 상태, 질문 작성폼임.
         # request.method가 GET인 경우 호출, 입력값 없이 객체 생성
         form = QuestionForm()
     context = {'form': form}
