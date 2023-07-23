@@ -20,6 +20,5 @@ def signup(request):
             return redirect('index')
     else:
     # GET요청
-        print("왓네")
         form = UserForm()
     return render(request, 'common/signup.html', {'form': form})
